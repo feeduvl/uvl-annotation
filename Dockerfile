@@ -4,5 +4,5 @@ COPY requirements.txt requirements.txt
 RUN pip3 install --upgrade pip -r requirements.txt
 
 EXPOSE 9661
-RUN ls
+RUN echo "Wdir contents: " && ls
 CMD [ "python3", "./app.py" ]
