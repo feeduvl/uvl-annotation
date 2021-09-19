@@ -5,7 +5,7 @@ from flask import Flask, json, request
 from do_nltk_downloads import do_nltk_downloads
 from tokenize_text import do_tokenize_text
 
-with open('config_fcic.json') as config_file:
+with open('tokenize_config.json') as config_file:
     CONFIG = json.load(config_file)
 
 app = Flask(__name__)
