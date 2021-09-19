@@ -18,6 +18,7 @@ app.logger.info("Server starting now.")
 do_nltk_downloads()
 
 
+
 @app.route('/hitec/annotation/tokenize', methods=["POST"])
 def tokenize_endpoint():
     app.logger.debug('/hitec/annotation/tokenize called')
