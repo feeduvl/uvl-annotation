@@ -1,7 +1,7 @@
 from logging.config import dictConfig
 
 from flask import Flask, json, request
-from flask_cors import CORS, cross_origin
+#from flask_cors import CORS, cross_origin
 import jsonpickle
 
 from do_nltk_downloads import do_nltk_downloads
