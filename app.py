@@ -23,9 +23,9 @@ do_nltk_downloads()
 
 
 #@cross_origin()
-@app.route('/hitec/annotation/tokenize', methods=["POST"])
+@app.route('/hitec/annotation/tokenize/', methods=["POST"])
 def tokenize_endpoint():
-    app.logger.debug('/hitec/annotation/tokenize called')
+    app.logger.debug('/hitec/annotation/tokenize/ called')
     content = json.loads(request.data.decode('utf-8'))
     text = "".join([doc["text"] + "\n" for doc in content["dataset"]["documents"]])
     ret = jsonpickle.encode(do_tokenize_text(text))
