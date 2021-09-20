@@ -27,7 +27,7 @@ do_nltk_downloads()
 def tokenize_endpoint():
     app.logger.debug('/hitec/annotation/tokenize/ called')
     content = json.loads(request.data.decode('utf-8'))
-    text = "".join([doc["text"] + "\n" for doc in content["dataset"]["documents"]])
+    text = "".join([doc["text"] + "\n" for doc in content["documents"]])
     ret = jsonpickle.encode(do_tokenize_text(text))
     # app.logger.debug("Returning: "+ret)
     print("Returning: " + ret)
