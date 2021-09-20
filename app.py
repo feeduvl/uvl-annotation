@@ -35,4 +35,4 @@ def tokenize_endpoint():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False, threaded=False, host=CONFIG['HOST'], port=CONFIG['PORT'])
