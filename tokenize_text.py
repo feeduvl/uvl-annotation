@@ -31,7 +31,14 @@ class Token:
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 
-def do_tokenize_text(text: str) -> list:
+class Annotation:
+    def __init__(self, tokens: list):
+        self.tokens = tokens
+        self.token_clusters = []
+        self.cluster_relationships = []
+
+
+def do_tokenize_text(text: str) -> Annotation:
     '''
     Tokenize a text according to the annotator API.
     :param text: input text
@@ -51,7 +58,8 @@ def do_tokenize_text(text: str) -> list:
     lemmas = [lemmatizer.lemmatize(t, pos=pos_tags[ind]) if pos_tags[ind] is not None else t
               for ind, t in enumerate(tokens)]
 
-    ret = [Token(ind, name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]
-    return ret
+    token_list = [Token(ind, name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]
+
+    return Annotation(token_list)
 
 
