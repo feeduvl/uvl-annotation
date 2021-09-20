@@ -19,8 +19,9 @@ def get_wordnet_pos(treebank_tag):
 
 
 class Token:
-    def __init__(self, name: str, lemma: str, pos: str):
+    def __init__(self, index: int, name: str, lemma: str, pos: str):
         # for convenience, set this attribute here so that it appears as 'null' on the client-side
+        self.index = index
         self.token_cluster = None
         self.name = name
         self.lemma = lemma
@@ -50,7 +51,7 @@ def do_tokenize_text(text: str) -> list:
     lemmas = [lemmatizer.lemmatize(t, pos=pos_tags[ind]) if pos_tags[ind] is not None else t
               for ind, t in enumerate(tokens)]
 
-    ret = [Token(name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]
+    ret = [Token(ind, name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]
     return ret
 
 
