@@ -1,7 +1,7 @@
 from logging.config import dictConfig
 
 from flask import Flask, json, request
-#from flask_cors import CORS, cross_origin
+from flask_cors import CORS, cross_origin
 import jsonpickle
 
 from do_nltk_downloads import do_nltk_downloads
@@ -12,8 +12,8 @@ with open('tokenize_config.json') as config_file:
     CONFIG = json.load(config_file)
 
 app = Flask(__name__)
-#cors = CORS(app)
-#app.config['CORS_HEADERS'] = 'Content-Type'
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 dictConfig({
     'version': 1, 'root': {'level': 'DEBUG'}})
@@ -23,7 +23,7 @@ app.logger.info("Server starting now.")
 do_nltk_downloads()
 
 
-#@cross_origin()
+@cross_origin()
 @app.route('/hitec/annotation/tokenize/', methods=["POST"])
 def tokenize_endpoint():
     app.logger.debug('/hitec/annotation/tokenize/ called')
