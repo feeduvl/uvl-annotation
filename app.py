@@ -5,7 +5,8 @@ from flask import Flask, json, request
 import jsonpickle
 
 from do_nltk_downloads import do_nltk_downloads
-from tokenize_text import do_tokenize_text
+from tokenize_text import do_tokenize_dataset
+from example_data import example_dataset
 
 with open('tokenize_config.json') as config_file:
     CONFIG = json.load(config_file)
@@ -28,8 +29,14 @@ def tokenize_endpoint():
     app.logger.debug('/hitec/annotation/tokenize/ called')
     content = json.loads(request.data.decode('utf-8'))
     app.logger.debug("Loaded json request: "+json.dumps(content))
-    text = "".join([doc["text"] + "\n" for doc in content["documents"]])
-    ret = jsonpickle.encode(do_tokenize_text(text))
+
+    try:
+        documents = content["documents"]
+    except KeyError as e:
+        app.logger.error("Didn't get documents, returning example data")
+        documents = example_dataset
+
+    ret = jsonpickle.encode(do_tokenize_dataset(documents), unpicklable=False)
     # app.logger.debug("Returning: "+ret)
     print("Returning: " + ret)
     return ret

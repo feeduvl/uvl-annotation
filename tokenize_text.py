@@ -22,44 +22,67 @@ class Token:
     def __init__(self, index: int, name: str, lemma: str, pos: str):
         # for convenience, set this attribute here so that it appears as 'null' on the client-side
         self.index = index
-        self.token_cluster = None
         self.name = name
         self.lemma = lemma
         self.pos = pos
+        self.num_codes = 0  # number of codes using this token
 
     def __str__(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 
 class Annotation:
-    def __init__(self, tokens: list):
+    def __init__(self, tokens: list, docs: list):
         self.tokens = tokens
-        self.token_clusters = []
-        self.cluster_relationships = []
+        self.codes = []
+        self.tore_relationships = []
+        self.docs = docs
 
 
-def do_tokenize_text(text: str) -> Annotation:
-    '''
-    Tokenize a text according to the annotator API.
+class DocWrapper:
+    def __init__(self, index: int, document_name: str, begin_index: int, end_index: int):
+        self.index = index
+        self.name = document_name
+        self.begin_index = begin_index
+        self.end_index = end_index
+
+
+def do_tokenize_dataset(documents: list) -> Annotation:
+    '''Given a list of documents, return the tokenization of these documents such that the document membership of each token can be identified
     :param text: input text
     :return:
     '''
 
+    texts = [doc["text"] + "\n" for doc in documents]
+    doc_names = [doc["id"] for doc in documents]
+    documents = [DocWrapper(ind+1, name, None, None) for (ind, name) in enumerate(doc_names)]
+
     lemmatizer = WordNetLemmatizer()
 
-    sentences = sent_tokenize(text)
-    sentence_tokens = [word_tokenize(s) for s in sentences]  # list of lists
+    sentences = []  # list of lists
 
-    # computing pos tags requires whole sentences
-    pos_tags = [get_wordnet_pos(tup[1]) for s in sentence_tokens for tup in pos_tag(s)]
+    for document_text in texts:
+        sentences.append(sent_tokenize(document_text))  # split the document into sentences
 
-    tokens = [t for s in sentence_tokens for t in s]
+    tokens = []
+    pos_tags = []
+
+    for doc_index, document_sentences in enumerate(sentences):
+        begin = len(tokens)
+        for s in document_sentences:
+            # computing pos tags requires whole sentences
+            sentence_tokens = word_tokenize(s)
+            pos_tags.extend([get_wordnet_pos(tup[1]) for tup in pos_tag(sentence_tokens)])
+            tokens.extend(sentence_tokens)  # add to existing list, remembering number of tokens in each document
+        end = len(tokens)
+        documents[doc_index].begin_index = begin
+        documents[doc_index].end_index = end
 
     lemmas = [lemmatizer.lemmatize(t, pos=pos_tags[ind]) if pos_tags[ind] is not None else t
               for ind, t in enumerate(tokens)]
 
     token_list = [Token(ind, name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]
 
-    return Annotation(token_list)
+    return Annotation(token_list, documents)
 
 
