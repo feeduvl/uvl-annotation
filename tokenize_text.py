@@ -32,11 +32,12 @@ class Token:
 
 
 class Annotation:
-    def __init__(self, tokens: list, docs: list):
+    def __init__(self, name: str, tokens: list, docs: list):
         self.tokens = tokens
         self.codes = []
         self.tore_relationships = []
         self.docs = docs
+        self.name = name
 
 
 class DocWrapper:
@@ -47,14 +48,12 @@ class DocWrapper:
         self.end_index = end_index
 
 
-def do_tokenize_dataset(documents: list) -> Annotation:
+def do_tokenize_dataset(name: str, documents: list) -> Annotation:
     '''Given a list of documents, return the tokenization of these documents such that the document membership of each token can be identified
     :param text: input text
     :return:
     '''
 
-    #texts = [doc["text"] + "\n" for doc in documents[:1]]
-    #doc_names = [doc["id"] for doc in documents[:1]]
     texts = [doc["text"] + "\n" for doc in documents]
     doc_names = [doc["id"] for doc in documents]
     documents = [DocWrapper(ind+1, name, None, None) for (ind, name) in enumerate(doc_names)]
@@ -85,6 +84,6 @@ def do_tokenize_dataset(documents: list) -> Annotation:
 
     token_list = [Token(ind, name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]
 
-    return Annotation(token_list, documents)
+    return Annotation(name, token_list, documents)
 
 
