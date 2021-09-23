@@ -53,8 +53,10 @@ def do_tokenize_dataset(documents: list) -> Annotation:
     :return:
     '''
 
-    texts = [doc["text"] + "\n" for doc in documents[:1]]
-    doc_names = [doc["id"] for doc in documents[:1]]
+    #texts = [doc["text"] + "\n" for doc in documents[:1]]
+    #doc_names = [doc["id"] for doc in documents[:1]]
+    texts = [doc["text"] + "\n" for doc in documents]
+    doc_names = [doc["id"] for doc in documents]
     documents = [DocWrapper(ind+1, name, None, None) for (ind, name) in enumerate(doc_names)]
 
     lemmatizer = WordNetLemmatizer()
