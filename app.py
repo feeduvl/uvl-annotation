@@ -49,7 +49,7 @@ def make_new_annotation():
     print("Returning: " + ret)
     return ret
 
-
+'''
 @cross_origin()
 @app.route('/hitec/repository/concepts/store/annotation/', methods=["POST"])
 def post_annotation():
@@ -89,7 +89,7 @@ def delete_annotation(annotation):
 
     ret = jsonpickle.encode(all_annotations, unpicklable=False)
     return ret
-
+'''
 
 if __name__ == '__main__':
     app.run(debug=False, threaded=False, host=CONFIG['HOST'], port=CONFIG['PORT'])
