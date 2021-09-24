@@ -41,8 +41,7 @@ class Annotation:
 
 
 class DocWrapper:
-    def __init__(self, index: int, document_name: str, begin_index: int, end_index: int):
-        self.index = index
+    def __init__(self, document_name: str, begin_index: int, end_index: int):
         self.name = document_name
         self.begin_index = begin_index
         self.end_index = end_index
@@ -56,7 +55,7 @@ def do_tokenize_dataset(name: str, documents: list) -> Annotation:
 
     texts = [doc["text"] + "\n" for doc in documents]
     doc_names = [doc["id"] for doc in documents]
-    documents = [DocWrapper(ind+1, name, None, None) for (ind, name) in enumerate(doc_names)]
+    documents = [DocWrapper(name, None, None) for name in doc_names]
 
     lemmatizer = WordNetLemmatizer()
 
