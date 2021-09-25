@@ -78,7 +78,7 @@ def do_tokenize_dataset(name: str, documents: list) -> Annotation:
         documents[doc_index].begin_index = begin
         documents[doc_index].end_index = end
 
-    lemmas = [lemmatizer.lemmatize(t, pos=pos_tags[ind]) if pos_tags[ind] is not None else t
+    lemmas = [lemmatizer.lemmatize(t, pos=pos_tags[ind]).lower() if pos_tags[ind] is not None else t.lower()
               for ind, t in enumerate(tokens)]
 
     token_list = [Token(ind, name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]
