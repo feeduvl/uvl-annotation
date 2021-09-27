@@ -49,7 +49,7 @@ def make_new_annotation():
 
 
 #@cross_origin()
-@app.route('/hitec/annotation/status/', methods=["GET"])
+@app.route('/hitec/annotation/status', methods=["GET"])
 def get_status():
     return jsonify({"status": "operational"})
 
