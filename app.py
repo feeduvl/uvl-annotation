@@ -1,7 +1,7 @@
 import time
 from logging.config import dictConfig
 
-from flask import Flask, json, request
+from flask import Flask, json, request, jsonify
 from flask_cors import CORS, cross_origin
 import jsonpickle
 
@@ -23,11 +23,9 @@ app.logger.info("Server starting now.")
 
 do_nltk_downloads()
 
-'''
-all_annotations = [{"name": "Annotation number 1", "dataset": "interview_data_normal"},
-                   {"name": "Annotation numero dos", "dataset": "interview_data_normal"},
-                   {"name": "Die dritte Annotation", "dataset": "interview_data_normal"}]
-'''
+
+# all_annotations = [{"name": "Annotation number 1", "dataset": "interview_data_normal"}, {"name": "Annotation numero dos", "dataset": "interview_data_normal"}, {"name": "Die dritte Annotation", "dataset": "interview_data_normal"}]
+
 
 @cross_origin()
 @app.route('/hitec/annotation/tokenize/', methods=["POST"])
@@ -50,7 +48,14 @@ def make_new_annotation():
     print("Returning: " + ret)
     return ret
 
+
+@cross_origin()
+@app.route('/hitec/annotation/status/', methods=["GET"])
+def get_status():
+    return jsonify({"status": "operational"})
+
 '''
+
 @cross_origin()
 @app.route('/hitec/repository/concepts/store/annotation/', methods=["POST"])
 def post_annotation():
@@ -78,12 +83,12 @@ def get_all_annotations():
 
 
 @cross_origin()
-@app.route('/hitec/repository/concepts/annotation/name/<annotation>', methods=["GET"])
+@app.route('/hitec/repository/concepts/annotation/name/<annotation>', methods=["DELETE"])
 def delete_annotation(annotation):
     app.logger.info("/hitec/repository/concepts/annotation/name/<annotation> deleting annotation: "+annotation)
 
     global all_annotations
-    all_annotations = [a for a in all_annotations if a["name"] == annotation]
+    all_annotations = [a for a in all_annotations if a["name"] != annotation]
     ret = jsonpickle.encode(all_annotations, unpicklable=False)
     return ret
 '''
