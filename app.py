@@ -2,7 +2,7 @@ import time
 from logging.config import dictConfig
 
 from flask import Flask, json, request, jsonify
-from flask_cors import CORS, cross_origin
+#from flask_cors import CORS, cross_origin
 import jsonpickle
 
 from do_nltk_downloads import do_nltk_downloads
@@ -13,8 +13,8 @@ with open('tokenize_config.json') as config_file:
     CONFIG = json.load(config_file)
 
 app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+#cors = CORS(app)
+#app.config['CORS_HEADERS'] = 'Content-Type'
 
 dictConfig({
     'version': 1, 'root': {'level': 'DEBUG'}})
@@ -26,8 +26,7 @@ do_nltk_downloads()
 
 # all_annotations = [{"name": "Annotation number 1", "dataset": "interview_data_normal"}, {"name": "Annotation numero dos", "dataset": "interview_data_normal"}, {"name": "Die dritte Annotation", "dataset": "interview_data_normal"}]
 
-
-@cross_origin()
+#
 @app.route('/hitec/annotation/tokenize/', methods=["POST"])
 def make_new_annotation():
     app.logger.debug('/hitec/annotation/tokenize/ called')
@@ -49,7 +48,7 @@ def make_new_annotation():
     return ret
 
 
-@cross_origin()
+#@cross_origin()
 @app.route('/hitec/annotation/status/', methods=["GET"])
 def get_status():
     return jsonify({"status": "operational"})
