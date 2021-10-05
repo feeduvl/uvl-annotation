@@ -25,7 +25,8 @@ class Token:
         self.name = name
         self.lemma = lemma
         self.pos = pos
-        self.num_codes = 0  # number of codes using this token
+        self.num_name_codes = 0  # number of codes using this token which have a non-empty name
+        self.num_tore_codes = 0
 
     def __str__(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
