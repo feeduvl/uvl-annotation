@@ -8,14 +8,13 @@ from nltk.corpus import wordnet
 def get_wordnet_pos(treebank_tag):
     if treebank_tag.startswith('J'):
         return wordnet.ADJ
-    elif treebank_tag.startswith('V'):
+    if treebank_tag.startswith('V'):
         return wordnet.VERB
-    elif treebank_tag.startswith('N'):
+    if treebank_tag.startswith('N'):
         return wordnet.NOUN
-    elif treebank_tag.startswith('R'):
+    if treebank_tag.startswith('R'):
         return wordnet.ADV
-    else:
-        return None
+    return None
 
 
 class Token:
@@ -85,5 +84,3 @@ def do_tokenize_dataset(name: str, documents: list) -> Annotation:
     token_list = [Token(ind, name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]
 
     return Annotation(name, token_list, documents)
-
-
