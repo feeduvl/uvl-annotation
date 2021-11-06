@@ -14,7 +14,7 @@ def get_wordnet_pos(treebank_tag):
         return wordnet.NOUN
     if treebank_tag.startswith('R'):
         return wordnet.ADV
-    return None
+    return ""
 
 
 class Token:
@@ -78,7 +78,7 @@ def do_tokenize_dataset(name: str, documents: list) -> Annotation:
         documents[doc_index].begin_index = begin
         documents[doc_index].end_index = end
 
-    lemmas = [lemmatizer.lemmatize(t, pos=pos_tags[ind]).lower() if pos_tags[ind] is not None else t.lower()
+    lemmas = [lemmatizer.lemmatize(t, pos=pos_tags[ind]).lower() if pos_tags[ind] != "" else t.lower()
               for ind, t in enumerate(tokens)]
 
     token_list = [Token(ind, name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]

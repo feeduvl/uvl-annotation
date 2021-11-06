@@ -23,10 +23,14 @@ app.logger.info("Server starting now.")
 
 do_nltk_downloads()
 
+'''
+owners = ["Example TORE Category 1", "Example TORE Category 2", "Example TORE Category 3"]
+relationship_names = ["Example Relationship 1", "Example Relationship 2", "Example Relationship 3"]
+tores = ["Example TORE Category 1", "Example TORE Category 2", "Example TORE Category 3"]
 
-# all_annotations = [{"name": "Annotation number 1", "dataset": "interview_data_normal"}, {"name": "Annotation numero dos", "dataset": "interview_data_normal"}, {"name": "Die dritte Annotation", "dataset": "interview_data_normal"}]
+all_annotations = [{"name": "Annotation number 1", "dataset": "interview_data_normal"}, {"name": "Annotation numero dos", "dataset": "interview_data_normal"}, {"name": "Die dritte Annotation", "dataset": "interview_data_normal"}]
+'''
 
-#
 @app.route('/hitec/annotation/tokenize/', methods=["POST"])
 def make_new_annotation():
     app.logger.debug('/hitec/annotation/tokenize/ called')
@@ -54,7 +58,6 @@ def get_status():
     return jsonify({"status": "operational"})
 
 '''
-
 @cross_origin()
 @app.route('/hitec/repository/concepts/store/annotation/', methods=["POST"])
 def post_annotation():
@@ -68,7 +71,10 @@ def get_annotation(annotation):
     app.logger.info("/hitec/repository/concepts/annotation/name/<annotation>/ returning dummy annotation for name: "+annotation)
 
     documents = example_dataset
-    ret = jsonpickle.encode(do_tokenize_dataset(annotation, documents), unpicklable=False)
+    dataset_name = "interview_data_normal"
+    ann = do_tokenize_dataset(annotation, documents);
+    ann.dataset = dataset_name
+    ret = jsonpickle.encode(ann, unpicklable=False)
     return ret
 
 
@@ -90,8 +96,46 @@ def delete_annotation(annotation):
     all_annotations = [a for a in all_annotations if a["name"] != annotation]
     ret = jsonpickle.encode(all_annotations, unpicklable=False)
     return ret
-'''
 
+
+@cross_origin()
+@app.route("/hitec/repository/concepts/annotation/relationships", methods=["GET"])
+def get_all_relationships():
+    return jsonpickle.encode({"relationship_names": relationship_names, "owners": owners})
+
+
+@cross_origin()
+@app.route("/hitec/repository/concepts/store/annotation/relationships/", methods=["POST"])
+def post_all_relationships():
+
+    app.logger.debug('/hitec/repository/concepts/store/annotation/relationships/ called')
+    content = json.loads(request.data.decode('utf-8'))
+    app.logger.debug("Loaded json request: "+json.dumps(content))
+
+    global relationship_names, owners
+    relationship_names = content["relationship_names"]
+    owners = content["owners"]
+    return "", 200
+
+
+@cross_origin()
+@app.route("/hitec/repository/concepts/annotation/tores", methods=["GET"])
+def get_all_tores():
+    return jsonpickle.encode({"tores": tores})
+
+
+@cross_origin()
+@app.route("/hitec/repository/concepts/store/annotation/tores/", methods=["POST"])
+def post_all_tores():
+    app.logger.debug('/hitec/repository/concepts/store/annotation/tores/ called')
+    content = json.loads(request.data.decode('utf-8'))
+    app.logger.debug("Loaded json request: " + json.dumps(content))
+
+    global tores
+    tores = content["tores"]
+    return "", 200
+
+'''
 
 if __name__ == '__main__':
     app.run(debug=False, threaded=False, host=CONFIG['HOST'], port=CONFIG['PORT'])
