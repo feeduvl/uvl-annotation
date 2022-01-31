@@ -31,7 +31,7 @@ tores = ["Example TORE Category 1", "Example TORE Category 2", "Example TORE Cat
 all_annotations = [{"name": "Annotation number 1", "dataset": "interview_data_normal"}, {"name": "Annotation numero dos", "dataset": "interview_data_normal"}, {"name": "Die dritte Annotation", "dataset": "interview_data_normal"}]
 '''
 
-@app.route("/hitec/annotation/tokenize", methods=["POST"])
+@app.route("/hitec/annotation/tokenize/", methods=["POST"])
 def make_new_annotation():
     app.logger.debug('/hitec/annotation/tokenize/ called')
     content = json.loads(request.data.decode('utf-8'))
@@ -59,7 +59,7 @@ def get_status():
 
 '''
 @cross_origin()
-@app.route("/hitec/repository/concepts/store/annotation", methods=["POST"])
+@app.route("/hitec/repository/concepts/store/annotation/", methods=["POST"])
 def post_annotation():
     app.logger.info("/hitec/repository/concepts/store/annotation/")
     return "Dummy endpoint success"
