@@ -138,4 +138,4 @@ def post_all_tores():
 '''
 
 if __name__ == '__main__':
-    app.run(debug=False, threaded=False, host=CONFIG['HOST'], port=CONFIG['PORT'], ssl_context='adhoc')
+    app.run(debug=False, threaded=False, host=CONFIG['HOST'], port=CONFIG['PORT'])
