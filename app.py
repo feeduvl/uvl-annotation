@@ -31,7 +31,7 @@ tores = ["Example TORE Category 1", "Example TORE Category 2", "Example TORE Cat
 all_annotations = [{"name": "Annotation number 1", "dataset": "interview_data_normal"}, {"name": "Annotation numero dos", "dataset": "interview_data_normal"}, {"name": "Die dritte Annotation", "dataset": "interview_data_normal"}]
 '''
 
-@app.route('/hitec/annotation/tokenize/', methods=["POST"])
+@app.route("/hitec/annotation/tokenize/", methods=["POST"])
 def make_new_annotation():
     app.logger.debug('/hitec/annotation/tokenize/ called')
     content = json.loads(request.data.decode('utf-8'))
@@ -53,20 +53,20 @@ def make_new_annotation():
 
 
 #@cross_origin()
-@app.route('/hitec/annotation/status', methods=["GET"])
+@app.route("/hitec/annotation/status", methods=["GET"])
 def get_status():
     return jsonify({"status": "operational"})
 
 '''
 @cross_origin()
-@app.route('/hitec/repository/concepts/store/annotation/', methods=["POST"])
+@app.route("/hitec/repository/concepts/store/annotation/", methods=["POST"])
 def post_annotation():
     app.logger.info("/hitec/repository/concepts/store/annotation/")
     return "Dummy endpoint success"
 
 
 @cross_origin()
-@app.route('/hitec/repository/concepts/annotation/name/<annotation>', methods=["GET"])
+@app.route("/hitec/repository/concepts/annotation/name/<annotation>", methods=["GET"])
 def get_annotation(annotation):
     app.logger.info("/hitec/repository/concepts/annotation/name/<annotation>/ returning dummy annotation for name: "+annotation)
 
@@ -79,7 +79,7 @@ def get_annotation(annotation):
 
 
 @cross_origin()
-@app.route('/hitec/repository/concepts/annotation/all', methods=["GET"])
+@app.route("/hitec/repository/concepts/annotation/all", methods=["GET"])
 def get_all_annotations():
     app.logger.info("/hitec/repository/concepts/annotation/all returning all annotations")
 
@@ -88,7 +88,7 @@ def get_all_annotations():
 
 
 @cross_origin()
-@app.route('/hitec/repository/concepts/annotation/name/<annotation>', methods=["DELETE"])
+@app.route("/hitec/repository/concepts/annotation/name/<annotation>", methods=["DELETE"])
 def delete_annotation(annotation):
     app.logger.info("/hitec/repository/concepts/annotation/name/<annotation> deleting annotation: "+annotation)
 
