@@ -7,3 +7,4 @@ def do_nltk_downloads():
     download('punkt')
     download('averaged_perceptron_tagger')
     download("wordnet")
+    download('omw-1.4')
