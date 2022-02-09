@@ -47,7 +47,7 @@ def make_new_annotation():
         all_annotations.append({"name": name, "dataset": dataset})
 
     ret = jsonpickle.encode(do_tokenize_dataset("An example dataset", documents), unpicklable=False)
-    # app.logger.debug("Returning: "+ret)
+    app.logger.debug("Returning: "+ret)
     print("Returning: " + ret)
     return ret
 
