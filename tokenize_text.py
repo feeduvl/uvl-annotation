@@ -72,6 +72,7 @@ def do_tokenize_dataset(name: str, documents: list) -> Annotation:
         for s in document_sentences:
             # computing pos tags requires whole sentences
             sentence_tokens = word_tokenize(s)
+            print(sentence_tokens)
             pos_tags.extend([get_wordnet_pos(tup[1]) for tup in pos_tag(sentence_tokens)])
             tokens.extend(sentence_tokens)  # add to existing list, remembering number of tokens in each document
         end = len(tokens)
