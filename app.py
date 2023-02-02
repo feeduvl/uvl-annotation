@@ -1,4 +1,5 @@
 import time
+import requests
 from logging.config import dictConfig
 
 from flask import Flask, json, request, jsonify
@@ -8,6 +9,8 @@ import jsonpickle
 from do_nltk_downloads import do_nltk_downloads
 from tokenize_text import do_tokenize_dataset
 from example_data import example_dataset
+from build_recommendation_statistik import Code, build
+from json import JSONEncoder
 
 with open('tokenize_config.json') as config_file:
     CONFIG = json.load(config_file)
@@ -136,6 +139,47 @@ def post_all_tores():
     return "", 200
 
 '''
+
+
+@app.route("/hitec/annotation/recommendation/rebuild/", methods=["POST"])
+def rebuildRecommendationDb():
+    app.logger.debug('/hitec/annotation/recommendation/rebuild/ called')
+    #response = requests.get('http://localhost:9684/hitec/repository/concepts/annotationcodes/all')
+    response = requests.get('https://feed-uvl.ifi.uni-heidelberg.de/hitec/repository/concepts/annotationcodes/all')
+    if response.status_code != 200:
+        return "ERR", 404
+    annotations = response.json()
+
+    if len(annotations) == 0:
+        app.logger.error('no existing annotations detected')
+    else:
+        app.logger.info('Count annotations: ' + str(len(annotations)))
+
+    codes = []
+    for annotation in annotations:
+        annotationCodes = annotation['codes']
+        #app.logger.info(annotation['name'] + " " + str(len(annotationCodes)))
+        for annotationCode in annotationCodes:
+            if annotationCode['name'] != "" and annotationCode['tore'] != "":
+                codes.append(Code(annotationCode['name'], annotationCode['tore']))
+
+    if len(codes) == 0:
+        app.logger.info('no existing codes detected')
+    else:
+        app.logger.info('Count Codes: ' + str(len(codes)))
+
+    recommendations = build(codes)
+
+    app.logger.info(str('Count recommendations: ' + str(len(recommendations))))
+
+    #recommendations = jsonpickle.encode(recommendations, unpicklable=False)
+
+    # request = requests.post('https://feed-uvl.ifi.uni-heidelberg.de/hitec/repository/concepts/store/dataset/', json=existing_collection)
+    # insertrequest = requests.post('http://localhost:9684/hitec/repository/concepts/store/recommendations/', data=recommendations)
+    # print("insertrequest:", insertrequest.status_code)
+
+    return "OK", 200
+
 
 if __name__ == '__main__':
     app.run(debug=False, threaded=False, host=CONFIG['HOST'], port=CONFIG['PORT'])
