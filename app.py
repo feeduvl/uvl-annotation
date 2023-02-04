@@ -10,7 +10,6 @@ from do_nltk_downloads import do_nltk_downloads
 from tokenize_text import do_tokenize_dataset
 from example_data import example_dataset
 from build_recommendation_statistik import Code, build
-from json import JSONEncoder
 
 with open('tokenize_config.json') as config_file:
     CONFIG = json.load(config_file)
@@ -158,7 +157,7 @@ def rebuildRecommendationDb():
     codes = []
     for annotation in annotations:
         annotationCodes = annotation['codes']
-        #app.logger.info(annotation['name'] + " " + str(len(annotationCodes)))
+        app.logger.info(annotation['name'] + " " + str(len(annotationCodes)))
         for annotationCode in annotationCodes:
             if annotationCode['name'] != "" and annotationCode['tore'] != "":
                 codes.append(Code(annotationCode['name'], annotationCode['tore']))
@@ -174,9 +173,8 @@ def rebuildRecommendationDb():
 
     #recommendations = jsonpickle.encode(recommendations, unpicklable=False)
 
-    # request = requests.post('https://feed-uvl.ifi.uni-heidelberg.de/hitec/repository/concepts/store/dataset/', json=existing_collection)
-    # insertrequest = requests.post('http://localhost:9684/hitec/repository/concepts/store/recommendations/', data=recommendations)
-    # print("insertrequest:", insertrequest.status_code)
+    #insertrequest = requests.post('https://feed-uvl.ifi.uni-heidelberg.de/hitec/repository/concepts/store/recommendations/', data=recommendations)
+    #insertrequest = requests.post('http://localhost:9684/hitec/repository/concepts/store/recommendations/', data=recommendations)
 
     return "OK", 200
 
