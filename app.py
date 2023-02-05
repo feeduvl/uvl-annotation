@@ -171,10 +171,13 @@ def rebuildRecommendationDb():
 
     app.logger.info(str('Count recommendations: ' + str(len(recommendations))))
 
-    #recommendations = jsonpickle.encode(recommendations, unpicklable=False)
+    recommendations = jsonpickle.encode(recommendations, unpicklable=False)
 
-    #insertrequest = requests.post('https://feed-uvl.ifi.uni-heidelberg.de/hitec/repository/concepts/store/recommendations/', data=recommendations)
+    insertrequest = requests.post('https://feed-uvl.ifi.uni-heidelberg.de/hitec/repository/concepts/store/recommendations/', data=recommendations)
     #insertrequest = requests.post('http://localhost:9684/hitec/repository/concepts/store/recommendations/', data=recommendations)
+
+    if insertrequest.status_code != 200:
+        return "ERR", 404
 
     return "OK", 200
 
