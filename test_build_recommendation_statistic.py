@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from build_recommendation_statistik import Code, build, Recommendation
+from build_recommendation_statistic import Code, build, Recommendation
 import jsonpickle
 import json
 

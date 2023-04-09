@@ -1,4 +1,3 @@
-import time
 import requests
 from logging.config import dictConfig
 
@@ -9,7 +8,7 @@ import jsonpickle
 from do_nltk_downloads import do_nltk_downloads
 from tokenize_text import do_tokenize_dataset
 from example_data import example_dataset
-from build_recommendation_statistik import Code, build
+from build_recommendation_statistic import Code, build
 
 with open('tokenize_config.json') as config_file:
     CONFIG = json.load(config_file)
@@ -143,7 +142,6 @@ def post_all_tores():
 @app.route("/hitec/annotation/recommendation/rebuild/", methods=["POST"])
 def rebuildRecommendationDb():
     app.logger.debug('/hitec/annotation/recommendation/rebuild/ called')
-    #response = requests.get('http://localhost:9684/hitec/repository/concepts/annotationcodes/all')
     response = requests.get('https://feed-uvl.ifi.uni-heidelberg.de/hitec/repository/concepts/annotationcodes/all')
     if response.status_code != 200:
         return "ERR", 404
@@ -174,7 +172,6 @@ def rebuildRecommendationDb():
     recommendations = jsonpickle.encode(recommendations, unpicklable=False)
 
     insertrequest = requests.post('https://feed-uvl.ifi.uni-heidelberg.de/hitec/repository/concepts/store/recommendations/', data=recommendations)
-    #insertrequest = requests.post('http://localhost:9684/hitec/repository/concepts/store/recommendations/', data=recommendations)
 
     if insertrequest.status_code != 200:
         return "ERR", 404
