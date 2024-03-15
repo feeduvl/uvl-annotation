@@ -38,8 +38,10 @@ def make_new_annotation():
     content = json.loads(request.data.decode('utf-8'))
     app.logger.debug("Loaded json request: "+json.dumps(content))
 
+    sentenceTokenisation_activated = content.get("sentenceTokenisation_activated", False)
+
     try:
-        documents = content["documents"]
+        documents = content["dataset"]["documents"]
     except KeyError as e:
         app.logger.error("Didn't get documents, returning example data (debugging)")
         documents = example_dataset
@@ -47,7 +49,7 @@ def make_new_annotation():
         dataset = "interview_data_normal"
         all_annotations.append({"name": name, "dataset": dataset})
 
-    ret = jsonpickle.encode(do_tokenize_dataset("An example dataset", documents), unpicklable=False)
+    ret = jsonpickle.encode(do_tokenize_dataset("An example dataset", documents, sentenceTokenisation_activated), unpicklable=False)
     app.logger.debug("Returning: "+ret)
     print("Returning: " + ret)
     return ret

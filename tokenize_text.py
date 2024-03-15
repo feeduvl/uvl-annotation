@@ -47,7 +47,7 @@ class DocWrapper:
         self.end_index = end_index
 
 
-def do_tokenize_dataset(name: str, documents: list) -> Annotation:
+def do_tokenize_dataset(name: str, documents: list, sentenceTokenisation_activated: bool) -> Annotation:
     '''Given a list of documents, return the tokenization of these documents such that the document membership of each token can be identified
     :param text: input text
     :return:
@@ -67,21 +67,35 @@ def do_tokenize_dataset(name: str, documents: list) -> Annotation:
     tokens = []
     pos_tags = []
 
-    for doc_index, document_sentences in enumerate(sentences):
-        begin = len(tokens)
-        for s in document_sentences:
-            # computing pos tags requires whole sentences
-            sentence_tokens = word_tokenize(s)
+    if not sentenceTokenisation_activated:
+        for doc_index, document_sentences in enumerate(sentences):
+            begin = len(tokens)
+            for s in document_sentences:
+                # computing pos tags requires whole sentences
+                sentence_tokens = word_tokenize(s)
 
-            pos_tags.extend([get_wordnet_pos(tup[1]) for tup in pos_tag(sentence_tokens)])
-            tokens.extend(sentence_tokens)  # add to existing list, remembering number of tokens in each document
-        end = len(tokens)
-        documents[doc_index].begin_index = begin
-        documents[doc_index].end_index = end
+                pos_tags.extend([get_wordnet_pos(tup[1]) for tup in pos_tag(sentence_tokens)])
+                tokens.extend(sentence_tokens)  # add to existing list, remembering number of tokens in each document
+            end = len(tokens)
+            documents[doc_index].begin_index = begin
+            documents[doc_index].end_index = end
 
-    lemmas = [lemmatizer.lemmatize(t, pos=pos_tags[ind]).lower() if pos_tags[ind] != "" else t.lower()
-              for ind, t in enumerate(tokens)]
+        lemmas = [lemmatizer.lemmatize(t, pos=pos_tags[ind]).lower() if pos_tags[ind] != "" else t.lower()
+                for ind, t in enumerate(tokens)]
 
-    token_list = [Token(ind, name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]
+        token_list = [Token(ind, name, lemmas[ind], pos_tags[ind]) for ind, name in enumerate(tokens)]
 
-    return Annotation(name, token_list, documents)
+        return Annotation(name, token_list, documents)
+    
+    else:
+        for doc_index, document_sentences in enumerate(sentences):
+            begin = len(tokens)
+            for sentence in document_sentences:
+                tokens.append(sentence)  # add to existing list, remembering number of tokens in each document
+            end = len(tokens)
+            documents[doc_index].begin_index = begin
+            documents[doc_index].end_index = end
+
+        token_list = [Token(ind, name, None, None) for ind, name in enumerate(tokens)]
+
+        return Annotation(name, token_list, documents)
