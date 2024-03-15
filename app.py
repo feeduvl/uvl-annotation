@@ -156,6 +156,8 @@ def rebuildRecommendationDb():
 
     codes = []
     for annotation in annotations:
+        if annotation['sentenceTokenisation_activated']:
+            continue
         annotationCodes = annotation['codes']
         app.logger.info(annotation['name'] + " " + str(len(annotationCodes)))
         for annotationCode in annotationCodes:
