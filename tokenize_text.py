@@ -154,9 +154,9 @@ def adjust_document_sentences(document_sentences: list) -> list:
 
     adjusted_document_sentences = []
     for idx, document_sentence in enumerate(document_sentences):
-        if idx == 0 and re.match(r'^[0-9]###', document_sentence):
+        if idx == 0 and re.match(r'^[0-9]\n###', document_sentence):
             # Split the first sentence based on the pattern
-            s1, s2 = re.split(r'(?<=[0-9]###)', document_sentence, maxsplit=1)
+            s1, s2 = re.split(r'(?<=[0-9]\n###)', document_sentence, maxsplit=1)
             # Remove leading whitespace from the second part
             s2 = s2.strip()
             # Append both parts to the adjusted_document_sentences list

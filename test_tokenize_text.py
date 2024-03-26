@@ -86,7 +86,7 @@ class Test(TestCase):
             "example annotation", example_dataset_komoot, sentenceTokenisation_activated)
  
         self.assertEqual(
-            annotation.tokens[0].name, "1###") 
+            annotation.tokens[0].name, "1\n###") 
         self.assertEqual(
             annotation.tokens[1].name, "This is a Komoot-Review.") 
         self.assertEqual(
@@ -100,31 +100,31 @@ class Test(TestCase):
         do_nltk_downloads()
 
         # test ### within text     
-        x = [{"text": '''1### This is a ### Komoot-Review. ###''', "id": "document 1"}]        
+        x = [{"text": '''1\n### This is a ### Komoot-Review. ###''', "id": "document 1"}]        
         annotation = do_tokenize_dataset(
             "example annotation", x, sentenceTokenisation_activated)
         self.assertEqual(
-            annotation.tokens[0].name, "1###")
+            annotation.tokens[0].name, "1\n###")
         self.assertEqual(
             annotation.tokens[1].name, "This is a ### Komoot-Review.") 
         self.assertEqual(
             annotation.tokens[2].name, "###")    
 
         # test reviews end without dot     
-        x = [{"text": '''1### This is a Komoot-Review ###''', "id": "document 1"}]        
+        x = [{"text": '''1\n### This is a Komoot-Review ###''', "id": "document 1"}]        
         annotation = do_tokenize_dataset(
             "example annotation", x, sentenceTokenisation_activated)
         self.assertEqual(
-            annotation.tokens[0].name, "1###")
+            annotation.tokens[0].name, "1\n###")
         self.assertEqual(
             annotation.tokens[1].name, "This is a Komoot-Review ###") 
 
         # test beginning review with ###
-        x = [{"text": '''1######This is a Komoot-Review. ###''', "id": "document 1"}]        
+        x = [{"text": '''1\n######This is a Komoot-Review. ###''', "id": "document 1"}]        
         annotation = do_tokenize_dataset(
             "example annotation", x, sentenceTokenisation_activated)
         self.assertEqual(
-            annotation.tokens[0].name, "1###")
+            annotation.tokens[0].name, "1\n###")
         self.assertEqual(
             annotation.tokens[1].name, "###This is a Komoot-Review.") 
         
