@@ -1,9 +1,10 @@
 from unittest import TestCase
 
-from do_nltk_downloads import do_nltk_downloads
-from example_data import example_dataset
-from tokenize_text import do_tokenize_dataset
+import jsonpickle
 
+from do_nltk_downloads import do_nltk_downloads
+from example_data import example_dataset, example_dataset_komoot
+from tokenize_text import do_tokenize_dataset
 
 sentenceTokenisation_activated = True
 
@@ -78,3 +79,59 @@ class Test(TestCase):
         self.assertEqual(annotation.tokens[-1].lemma, None)
         self.assertEqual(annotation.tokens[-2].lemma, None)
         self.assertEqual(annotation.tokens[-3].lemma, None)
+    
+    def test_do_tokenize_dataset_sentencebased_komoot(self):
+        do_nltk_downloads()
+        annotation = do_tokenize_dataset(
+            "example annotation", example_dataset_komoot, sentenceTokenisation_activated)
+ 
+        self.assertEqual(
+            annotation.tokens[0].name, "1###") 
+        self.assertEqual(
+            annotation.tokens[1].name, "This is a Komoot-Review.") 
+        self.assertEqual(
+            annotation.tokens[2].name, "The App is very slow.") 
+        self.assertEqual(
+            annotation.tokens[3].name, "This is the last sentence.") 
+        self.assertEqual(
+            annotation.tokens[4].name, "###")
+
+    def test_do_tokenize_dataset_sentencebased_with_adjust_document_sentences(self):
+        do_nltk_downloads()
+
+        # test ### within text     
+        x = [{"text": '''1### This is a ### Komoot-Review. ###''', "id": "document 1"}]        
+        annotation = do_tokenize_dataset(
+            "example annotation", x, sentenceTokenisation_activated)
+        self.assertEqual(
+            annotation.tokens[0].name, "1###")
+        self.assertEqual(
+            annotation.tokens[1].name, "This is a ### Komoot-Review.") 
+        self.assertEqual(
+            annotation.tokens[2].name, "###")    
+
+        # test reviews end without dot     
+        x = [{"text": '''1### This is a Komoot-Review ###''', "id": "document 1"}]        
+        annotation = do_tokenize_dataset(
+            "example annotation", x, sentenceTokenisation_activated)
+        self.assertEqual(
+            annotation.tokens[0].name, "1###")
+        self.assertEqual(
+            annotation.tokens[1].name, "This is a Komoot-Review ###") 
+
+        # test beginning review with ###
+        x = [{"text": '''1######This is a Komoot-Review. ###''', "id": "document 1"}]        
+        annotation = do_tokenize_dataset(
+            "example annotation", x, sentenceTokenisation_activated)
+        self.assertEqual(
+            annotation.tokens[0].name, "1###")
+        self.assertEqual(
+            annotation.tokens[1].name, "###This is a Komoot-Review.") 
+        
+       # test beginning ### (NOT komoot review)
+        x = [{"text": '''###This is a Review.''', "id": "document 1"}]        
+        annotation = do_tokenize_dataset(
+            "example annotation", x, sentenceTokenisation_activated)
+        self.assertEqual(
+            annotation.tokens[0].name, "###This is a Review.") 
+
