@@ -6,14 +6,14 @@ from do_nltk_downloads import do_nltk_downloads
 from example_data import example_dataset, example_dataset_komoot
 from tokenize_text import do_tokenize_dataset
 
-sentenceTokenisation_activated = True
+sentenceTokenizationEnabledForAnnotation = True
 
 
 class Test(TestCase):
     def test_do_tokenize_dataset_wordbased(self):
         do_nltk_downloads()
         annotation = do_tokenize_dataset(
-            "example annotation", example_dataset, not sentenceTokenisation_activated)
+            "example annotation", example_dataset, not sentenceTokenizationEnabledForAnnotation)
         self.assertTrue(len(annotation.codes) == len(
             annotation.tore_relationships) == 0)
         self.assertEqual(len(annotation.docs), 14)
@@ -46,7 +46,7 @@ class Test(TestCase):
     def test_do_tokenize_dataset_sentencebased(self):
         do_nltk_downloads()
         annotation = do_tokenize_dataset(
-            "example annotation", example_dataset, sentenceTokenisation_activated)
+            "example annotation", example_dataset, sentenceTokenizationEnabledForAnnotation)
         self.assertTrue(len(annotation.codes) == len(
             annotation.tore_relationships) == 0)
  
@@ -83,7 +83,7 @@ class Test(TestCase):
     def test_do_tokenize_dataset_sentencebased_komoot(self):
         do_nltk_downloads()
         annotation = do_tokenize_dataset(
-            "example annotation", example_dataset_komoot, sentenceTokenisation_activated)
+            "example annotation", example_dataset_komoot, sentenceTokenizationEnabledForAnnotation)
  
         self.assertEqual(
             annotation.tokens[0].name, "1\n###") 
@@ -102,7 +102,7 @@ class Test(TestCase):
         # test ### within text     
         x = [{"text": '''1\n### This is a ### Komoot-Review. ###''', "id": "document 1"}]        
         annotation = do_tokenize_dataset(
-            "example annotation", x, sentenceTokenisation_activated)
+            "example annotation", x, sentenceTokenizationEnabledForAnnotation)
         self.assertEqual(
             annotation.tokens[0].name, "1\n###")
         self.assertEqual(
@@ -113,7 +113,7 @@ class Test(TestCase):
         # test reviews end without dot     
         x = [{"text": '''1\n### This is a Komoot-Review ###''', "id": "document 1"}]        
         annotation = do_tokenize_dataset(
-            "example annotation", x, sentenceTokenisation_activated)
+            "example annotation", x, sentenceTokenizationEnabledForAnnotation)
         self.assertEqual(
             annotation.tokens[0].name, "1\n###")
         self.assertEqual(
@@ -122,7 +122,7 @@ class Test(TestCase):
         # test beginning review with ###
         x = [{"text": '''1\n######This is a Komoot-Review. ###''', "id": "document 1"}]        
         annotation = do_tokenize_dataset(
-            "example annotation", x, sentenceTokenisation_activated)
+            "example annotation", x, sentenceTokenizationEnabledForAnnotation)
         self.assertEqual(
             annotation.tokens[0].name, "1\n###")
         self.assertEqual(
@@ -131,7 +131,7 @@ class Test(TestCase):
        # test beginning ### (NOT komoot review)
         x = [{"text": '''###This is a Review.''', "id": "document 1"}]        
         annotation = do_tokenize_dataset(
-            "example annotation", x, sentenceTokenisation_activated)
+            "example annotation", x, sentenceTokenizationEnabledForAnnotation)
         self.assertEqual(
             annotation.tokens[0].name, "###This is a Review.") 
 

@@ -38,7 +38,7 @@ def make_new_annotation():
     content = json.loads(request.data.decode('utf-8'))
     app.logger.debug("Loaded json request: "+json.dumps(content))
 
-    sentenceTokenisation_activated = content.get("sentenceTokenisation_activated", False)
+    sentenceTokenizationEnabledForAnnotation = content.get("sentenceTokenizationEnabledForAnnotation", False)
 
     try:
         documents = content["dataset"]["documents"]
@@ -49,7 +49,7 @@ def make_new_annotation():
         dataset = "interview_data_normal"
         all_annotations.append({"name": name, "dataset": dataset})
 
-    ret = jsonpickle.encode(do_tokenize_dataset("An example dataset", documents, sentenceTokenisation_activated), unpicklable=False)
+    ret = jsonpickle.encode(do_tokenize_dataset("An example dataset", documents, sentenceTokenizationEnabledForAnnotation), unpicklable=False)
     app.logger.debug("Returning: "+ret)
     print("Returning: " + ret)
     return ret
@@ -156,7 +156,7 @@ def rebuildRecommendationDb():
 
     codes = []
     for annotation in annotations:
-        if annotation['sentenceTokenisation_activated']:
+        if annotation['sentence_tokenization_enabled_for_annotation']:
             continue
         annotationCodes = annotation['codes']
         app.logger.info(annotation['name'] + " " + str(len(annotationCodes)))

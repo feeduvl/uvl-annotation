@@ -47,12 +47,12 @@ class DocWrapper:
         self.end_index = end_index
 
 
-def do_tokenize_dataset(name: str, documents: list, sentenceTokenisation_activated: bool) -> Annotation:
+def do_tokenize_dataset(name: str, documents: list, sentenceTokenizationEnabledForAnnotation: bool) -> Annotation:
     '''Given a list of documents, return the tokenization of these documents such that the document membership of each token can be identified
 
     :param name: Name of the dataset
     :param documents: List, that contains the documents (these include for example the text)
-    :param sentenceTokenisation_activated: Boolean, that says if has to be returned a sentence-based or word-based annotation
+    :param sentenceTokenizationEnabledForAnnotation: Boolean, that says if has to be returned a sentence-based or word-based annotation
 
     :return: Word-based Annotation or Sentence-based Annotation
     '''
@@ -61,7 +61,7 @@ def do_tokenize_dataset(name: str, documents: list, sentenceTokenisation_activat
     doc_names = [doc["id"] for doc in documents]
     documents = [DocWrapper(name, None, None) for name in doc_names]
 
-    if not sentenceTokenisation_activated:
+    if not sentenceTokenizationEnabledForAnnotation:
         return tokenize_word_based(name, texts, documents)
     else:
         return tokenize_sentence_based(name, texts, documents)
