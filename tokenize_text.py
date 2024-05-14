@@ -83,11 +83,8 @@ def tokenize_word_based(name: str, texts: list, documents: list) -> Annotation:
     tokens = []
     pos_tags = []
 
-    print("texts: ", texts)
-
     for document_text in texts:
         # split the document into document_sentences
-        print("document_text: ", document_text)
         document_sentences.append(sent_tokenize(document_text))
     for doc_index, document_sentence in enumerate(document_sentences):
         begin = len(tokens)
@@ -126,10 +123,16 @@ def tokenize_sentence_based(name: str, texts: list, documents: list) -> Annotati
     document_sentences = []
     tokens = []
 
-    for document_text in texts:
-        #print("document_text: ", document_text)
-        document_sentences.append(
-            adjust_document_sentences(sent_tokenize(document_text)))
+    isKomootAppReviewDataset = re.match(r'^[0-9]\n###', texts[0])
+
+    if isKomootAppReviewDataset:
+        for document_text in texts:
+            document_sentences.append(
+                adjust_komoot_sentences(sent_tokenize(document_text)))
+    else:
+        for document_text in texts:
+            document_sentences.append(sent_tokenize(document_text))
+
     for doc_index, document_sentence in enumerate(document_sentences):
         begin = len(tokens)
         for sentence in document_sentence:
@@ -145,11 +148,14 @@ def tokenize_sentence_based(name: str, texts: list, documents: list) -> Annotati
     return Annotation(name, token_list, documents)
 
 
-def adjust_document_sentences(document_sentences: list) -> list:
+def adjust_komoot_sentences(document_sentences: list) -> list:
     """
     For example, in the "Komoot_AppReview" dataset, at the beginning of each review there is the rating followed by three "#" 
     like for example "4###". In sentence-based tokenization, "4###" is included in the first sentence of the review, that is 
     "4###<FirstSentence>". Here, "4###<FirstSentence>" is splitted into "4###" and "<FirstSentence>".
+    It also needs to be ensured, that the last sentence of an App Review does not contain the "###", which are always added in
+    the end of an App Review. (The last sentence contains the "###", if it does not end with a dot)
+    So, "<LastSentence>###" is splitted into "<LastSentence>" and "###".
 
     :param name: List, that contains the document sentences.
 
@@ -157,16 +163,36 @@ def adjust_document_sentences(document_sentences: list) -> list:
     """
 
     adjusted_document_sentences = []
+    
     for idx, document_sentence in enumerate(document_sentences):
-        #print("document_sentence: ", document_sentence)
-        if idx == 0 and re.match(r'^[0-9]\n###', document_sentence):
+        isFirstSentence = idx == 0
+        isLastSentence = idx == len(document_sentences) -1
+        isOnlyOneSentence = isFirstSentence == isLastSentence
+
+        if isFirstSentence:
             # Split the first sentence based on the pattern
             s1, s2 = re.split(r'(?<=[0-9]\n###)', document_sentence, maxsplit=1)
             # Remove leading whitespace from the second part
             s2 = s2.strip()
-            # Append both parts to the adjusted_document_sentences list
-            adjusted_document_sentences.extend([s1, s2])
-        else:
+            if not isOnlyOneSentence:
+                adjusted_document_sentences.extend([s1, s2])
+            else:
+                adjusted_document_sentences.append(s1)
+                a1, _ = re.split(r'###$', s2)
+                if len(a1) > 0:
+                    adjusted_document_sentences.extend([a1, '###'])
+                else:
+                    adjusted_document_sentences.append(s2)
+
+        if isLastSentence and not isOnlyOneSentence :
+            s1, s2 = re.split(r'###$', document_sentence)
+            if len(s1) > 0:
+                adjusted_document_sentences.extend([s1, '###'])
+            else:
+                adjusted_document_sentences.append(document_sentence)
+            
+
+        if not isFirstSentence and not isLastSentence:
             adjusted_document_sentences.append(document_sentence)
 
     return adjusted_document_sentences

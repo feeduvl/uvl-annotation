@@ -96,9 +96,6 @@ class Test(TestCase):
         self.assertEqual(
             annotation.tokens[4].name, "###")
 
-    def test_do_tokenize_dataset_sentencebased_with_adjust_document_sentences(self):
-        do_nltk_downloads()
-
         # test ### within text     
         x = [{"text": '''1\n### This is a ### Komoot-Review. ###''', "id": "document 1"}]        
         annotation = do_tokenize_dataset(
@@ -117,7 +114,11 @@ class Test(TestCase):
         self.assertEqual(
             annotation.tokens[0].name, "1\n###")
         self.assertEqual(
-            annotation.tokens[1].name, "This is a Komoot-Review ###") 
+            annotation.tokens[1].name, "This is a Komoot-Review ") 
+        self.assertEqual(
+            annotation.tokens[2].name, "###")         
+        self.assertEqual(
+            len(annotation.tokens), 3)
 
         # test beginning review with ###
         x = [{"text": '''1\n######This is a Komoot-Review. ###''', "id": "document 1"}]        
