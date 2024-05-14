@@ -83,8 +83,11 @@ def tokenize_word_based(name: str, texts: list, documents: list) -> Annotation:
     tokens = []
     pos_tags = []
 
+    print("texts: ", texts)
+
     for document_text in texts:
         # split the document into document_sentences
+        print("document_text: ", document_text)
         document_sentences.append(sent_tokenize(document_text))
     for doc_index, document_sentence in enumerate(document_sentences):
         begin = len(tokens)
@@ -124,7 +127,7 @@ def tokenize_sentence_based(name: str, texts: list, documents: list) -> Annotati
     tokens = []
 
     for document_text in texts:
-        print("document_text: ", document_text)
+        #print("document_text: ", document_text)
         document_sentences.append(
             adjust_document_sentences(sent_tokenize(document_text)))
     for doc_index, document_sentence in enumerate(document_sentences):
@@ -155,7 +158,7 @@ def adjust_document_sentences(document_sentences: list) -> list:
 
     adjusted_document_sentences = []
     for idx, document_sentence in enumerate(document_sentences):
-        print("document_sentence: ", document_sentence)
+        #print("document_sentence: ", document_sentence)
         if idx == 0 and re.match(r'^[0-9]\n###', document_sentence):
             # Split the first sentence based on the pattern
             s1, s2 = re.split(r'(?<=[0-9]\n###)', document_sentence, maxsplit=1)
