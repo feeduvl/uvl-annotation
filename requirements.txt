@@ -1,5 +1,5 @@
 Flask==3.0.3
-nltk==3.8.1
+nltk==3.8.2
 jsonpickle==3.2.2
 flask_cors==4.0.1
 requests==2.32.3
